@@ -45,6 +45,13 @@ const postSchema = mongoose.Schema(
         }
       },
     },
+    candidatures: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Candidature',
+        foreignField: '_id'
+      }
+    ]
   },
   {
     timestamps: true,
@@ -56,16 +63,12 @@ postSchema.plugin(toJSON);
 postSchema.plugin(paginate);
 
 /**
- * Check if post can accept applicats
- * @param {ObjectId} id - The psot's id
+ * Check if post can accept applicants
  * @returns {Promise<boolean>}
  */
-postSchema.statics.canAcceptCandidate = async function (id) {
-  const post = await this.findById(id);
-
-  if (post.yearsOfExperience === 0)
-    return false;
-  return true;
+postSchema.methods.canAcceptCandidate = async function () {
+  const post = this;
+  return post.yearsOfExperience > 0;
 };
 
 /**

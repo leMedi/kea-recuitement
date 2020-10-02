@@ -13,6 +13,26 @@ const createPost = async (postBody) => {
 };
 
 /**
+ * add new Candidate
+ * @param {Object} id
+ * @param {Object} candidatureId
+ * @returns {Promise<Post>}
+ */
+const addNewCandidate = async (id, candidatureId) => {
+  const post = await Post.findById(id);
+
+  if (!post || !post.canAcceptCandidate()) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'connot accpet candidature');
+  }
+
+  post.availablePlaces = post.availablePlaces - 1;
+  post.candidatures.push(candidatureId)
+  await post.save();
+
+  return post;
+};
+
+/**
  * Query for posts
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
@@ -67,6 +87,7 @@ const deletePostById = async (postId) => {
 
 module.exports = {
   createPost,
+  addNewCandidate,
   queryPosts,
   getPostById,
   updatePostById,

@@ -9,12 +9,16 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('managePosts'), validate(postValidation.createPost), postController.createPost)
-  .get(validate(postValidation.getPosts), postController.getPosts);
+  .get(auth('getPosts'), validate(postValidation.getPosts), postController.getPosts);
 
-// router
-//   .route('/:userId')
-//   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-//   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-//   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+router
+  .route('/:postId')
+  .get(auth('managePosts'), validate(postValidation.getPost), postController.getPost)
+  .patch(auth('managePosts'), validate(postValidation.updatePost), postController.updatePost)
+  .delete(auth('managePosts'), validate(postValidation.deletePost), postController.deletePost);
+
+router
+  .route('/:postId/postuler')
+    .post(auth('postuler'), validate(postValidation.postuler), postController.postuler)
 
 module.exports = router;

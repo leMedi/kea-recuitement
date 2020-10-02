@@ -21,6 +21,19 @@ const createUser = async (userBody) => {
 };
 
 /**
+ * Get user by id
+ * @param {User} user
+ * @param {Object} candidatureId
+ * @returns {Promise<User>}
+ */
+const saveCandidature = async (user, candidatureId) => {
+  user.candidatures.push(candidatureId)
+  await user.save();
+
+  return user;
+};
+
+/**
  * Query for users
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
@@ -94,12 +107,40 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+/**
+ * Create default admin user
+ * @returns {Promise<User>}
+ */
+const tryCreateAdmin = async () => {
+  const admin = {
+    "email": "admin@admin.com",
+    "phone": "0611223344",
+    "password": "ADMINpass1.",
+    "firstName": "Admin",
+    "lastName": "admin",
+    "profession": "Recruteur",
+    "role": "recruiter"
+}
+  if (await User.isEmailTaken(admin.email)) {
+    return;
+  }
+
+  if (await User.isPhoneTaken(admin.phone)) {
+    return;
+  }
+
+  const user = await User.create(admin);
+  return user;
+};
+
 module.exports = {
   createUser,
+  saveCandidature,
   queryUsers,
   getUserById,
   getUserByEmail,
   getUserByPhone,
   updateUserById,
   deleteUserById,
+  tryCreateAdmin
 };

@@ -63,6 +63,12 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'applicant',
     },
+    candidatures: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Candidature"
+      }
+    ]
   },
   {
     timestamps: true,

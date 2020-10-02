@@ -11,6 +11,12 @@ const createPost = {
   }),
 };
 
+const postuler = {
+  params: Joi.object().keys({
+    postId: Joi.string().custom(objectId),
+  }),
+};
+
 const getPosts = {
   query: Joi.object().keys({
     yearsOfExperience: Joi.string(),
@@ -50,6 +56,7 @@ const deletePost = {
 
 module.exports = {
   createPost,
+  postuler,
   getPosts,
   getPost,
   updatePost,
